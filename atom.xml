@@ -6,7 +6,7 @@
   <link href="https://kukupii.github.io/atom.xml" rel="self"/>
   
   <link href="https://kukupii.github.io/"/>
-  <updated>2022-11-17T08:55:38.202Z</updated>
+  <updated>2022-12-20T07:34:06.934Z</updated>
   <id>https://kukupii.github.io/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Vue源码阅读笔记</title>
+    <link href="https://kukupii.github.io/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/"/>
+    <id>https://kukupii.github.io/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/</id>
+    <published>2022-12-20T08:12:23.000Z</published>
+    <updated>2022-12-20T07:34:06.934Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://www.bilibili.com/video/BV1rC4y187Vw/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=d247184ffe2b5293f1c76874d6153aed">跟尤雨溪一起解读Vue3源码【中英字幕】- Vue Mastery</a>观看笔记记录。</p><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><h3 id="what-is-the-DOM"><a href="#what-is-the-DOM" class="headerlink" title="what is the DOM?"></a>what is the DOM?</h3><p>Document Object Model. This is our browser’s interface(API) to change what is displayed on the screen. HTML maps to a series of DOM nodes that we can manipulate by JavaScript.</p><p>文件对象模型，浏览器页面所呈现的内容。把HTML加载到浏览器，浏览器创建一系列的DOM节点，并渲染在页面上，这些DOM节点可以使用JS进行操作。</p><h3 id="Virtual-DOM"><a href="#Virtual-DOM" class="headerlink" title="Virtual DOM"></a>Virtual DOM</h3><p>DOM tree上可以有成千上万的DOM节点，搜索和更新起来非常困难，因此诞生了Virtual DOM.</p><p>Virtual DOM is a way of representing the actual DOM with JavaScript Objects.</p><p>一个简单的HTML，比如<code>&lt;div&gt;hello&lt;/div&gt;</code>,可以通过Vnode表现为</p><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="attr">text</span>:<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>Vue基于模板创建一个渲染函数，并返回一个Vnode对象,例如</p><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params">h</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>,<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>当Vnode有变化时，渲染函数再次运行，创建一个新的vnode节点，并与旧vnode节点对比（diff）。</p><h3 id="Vue-core-module"><a href="#Vue-core-module" class="headerlink" title="Vue core module:"></a>Vue core module:</h3><p>Reactivity module, Compiler Module, Renderer Module.</p><h4 id="Reactivity-module"><a href="#Reactivity-module" class="headerlink" title="Reactivity module:"></a>Reactivity module:</h4><p>allow us to create JavaScript reactive objects that can be watched for changes.</p><p>when code which uses these objects are run, they’re tracked, so they can be run later if the reactivity object changes.</p><h4 id="Compiler-Module"><a href="#Compiler-Module" class="headerlink" title="Compiler Module:"></a>Compiler Module:</h4><p>takes HTML templates and compiles them into render functions, more often happens when a Vue project is built, so that a browser only ever receives render functions.</p><h4 id="Renderer-Module"><a href="#Renderer-Module" class="headerlink" title="Renderer Module:"></a>Renderer Module:</h4><p><strong>Three phases: Render, mount and patch.</strong></p><p>render phase: call render function and return virtual DOM node.</p><p>mount phase: use vnode creates webpage</p><p>patch phase: compare old vnode with new vnode, and only updates the changed part.</p><h3 id="Walking-through-a-simple-Vue-app-a-template-which-reference-to-a-reactive-object"><a href="#Walking-through-a-simple-Vue-app-a-template-which-reference-to-a-reactive-object" class="headerlink" title="Walking through a simple Vue app: a template which reference to a reactive object"></a>Walking through a simple Vue app: a template which reference to a reactive object</h3><ol><li><p>the template compiler changes HTML into a render function</p></li><li><p>the reactive objects are initialized using the reactivity module</p></li><li><p>the render function returns a DOM node.  it’s referred reactive object, now be watched.</p></li><li><p>the mount phase uses the VNode to create the DOM to webpage</p></li><li><p>if any changes happen to our reactive object, it will cause a re-render</p></li></ol><h2 id="Rendering-Mechanism"><a href="#Rendering-Mechanism" class="headerlink" title="Rendering Mechanism"></a>Rendering Mechanism</h2><h3 id="Benefits-of-Virtual-DOM"><a href="#Benefits-of-Virtual-DOM" class="headerlink" title="Benefits of Virtual DOM:"></a>Benefits of Virtual DOM:</h3><ol><li><p>Decouples rendering logical from the actual DOM - makes it straighforward to reuse it in non-browser envirnoment, e.g. rendering to a string(SSR), rendering to a canvas&#x2F;WebGL, or native mobile rendering.</p></li><li><p>Provides the ability to programmatically construct, inspect, clone and create derivative structures before actually returning it to the rendering engine, and it using the full power of JavaScript.</p></li></ol><p>Conclusion: templates will get where you want to go, in 99% situation, you only need to write down the HTML, but if you want to do something programmatically, in that case, you need to code up a render funtion.</p><h3 id="What-is-render-function"><a href="#What-is-render-function" class="headerlink" title="What is render function?"></a>What is render function?</h3><p>In <strong>Vue2</strong> API (more nestle)</p><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params">h</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>, &#123;</span><br><span class="line">        <span class="attr">attrs</span>:&#123;</span><br><span class="line">            <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">on</span>:&#123;</span><br><span class="line">            <span class="attr">click</span>:<span class="variable language_">this</span>.<span class="property">onClick</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>In <strong>Vue3</strong> API</p><ul><li><p>Flat props structure</p></li><li><p>Globally imported <code>h</code> helper</p></li></ul><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; h &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>,&#123;</span><br><span class="line">        <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span>,</span><br><span class="line">        <span class="attr">onClick</span>: <span class="variable language_">this</span>.<span class="property">onClick</span></span><br><span class="line">    &#125;, <span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://www.bilibili.com/video/BV1rC4y187Vw/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&amp;vd_sourc</summary>
+      
+    
+    
+    
+    
+    <category term="vue3" scheme="https://kukupii.github.io/tags/vue3/"/>
+    
+    <category term="notes" scheme="https://kukupii.github.io/tags/notes/"/>
+    
+  </entry>
   
   <entry>
     <title>js30学习笔记（01~05）</title>
@@ -100,11 +124,11 @@
     
     <category term="typescript" scheme="https://kukupii.github.io/tags/typescript/"/>
     
+    <category term="error" scheme="https://kukupii.github.io/tags/error/"/>
+    
     <category term="vue" scheme="https://kukupii.github.io/tags/vue/"/>
     
     <category term="zheye" scheme="https://kukupii.github.io/tags/zheye/"/>
-    
-    <category term="error" scheme="https://kukupii.github.io/tags/error/"/>
     
   </entry>
   
