@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+
+    
+
+    <!-- 渲染优化 -->
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="HandheldFriendly" content="True" >
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--icon-->
+
+    
+        <link rel="shortcut icon" href="/favicon.ico">
+    
+    
+    
+    
+    
+
+
+    <!-- meta -->
+
+
+<title>抽离组件——Uploader组件 | Loplooop</title>
+
+
+    <meta name="keywords" content="typescript, vue, zheye, component, conclusion">
+
+
+
+
+    <!-- OpenGraph -->
+ 
+    <meta name="description" content="上传文件的两种实现方式 form-submission  JavaScript发送异步请求   Form-submission使用&lt;form&gt;标签。 跟普通的字符串不同，文件是二进制格式，所以要额外设置enctype&#x3D;&#39;multipart&#x2F;form-data&#39;。 关于 POST encType 的描述:POST - HTTP | MDN  application&amp;#x2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="抽离组件——Uploader组件">
+<meta property="og:url" content="https://kukupii.github.io/2022/11/03/%E6%8A%BD%E7%A6%BB%E7%BB%84%E4%BB%B6%E2%80%94%E2%80%94Uploader%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Loplooop">
+<meta property="og:description" content="上传文件的两种实现方式 form-submission  JavaScript发送异步请求   Form-submission使用&lt;form&gt;标签。 跟普通的字符串不同，文件是二进制格式，所以要额外设置enctype&#x3D;&#39;multipart&#x2F;form-data&#39;。 关于 POST encType 的描述:POST - HTTP | MDN  application&amp;#x2">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-11-03T13:04:17.000Z">
+<meta property="article:modified_time" content="2022-11-17T08:43:06.107Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="typescript">
+<meta property="article:tag" content="vue">
+<meta property="article:tag" content="zheye">
+<meta property="article:tag" content="component">
+<meta property="article:tag" content="conclusion">
+<meta name="twitter:card" content="summary_large_image">
+
+
+    
+<link rel="stylesheet" href="/css/style/main.css">
+ 
+
+    
+    
+        <link rel="stylesheet" id="hl-default-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/github.min.css" media="none" >
+        
+            <link rel="stylesheet" id="hl-dark-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/atom-one-dark-reasonable.min.css" media="none">
+        
+    
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/style/dark.min.css">
+
+    
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/js/darkmode.min.js"></script>
+
+
+
+     
+
+    <!-- custom head -->
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Loplooop" type="application/atom+xml">
+</head>
+
+    <body>
+        <div id="app" tabindex="-1">
+            <header class="header">
+    <div class="header__left">
+        <a href="/" class="button">
+            <span class="logo__text">Loploop</span>
+        </a>
+    </div>
+    <div class="header__right">
+        
+            <div class="navbar__menus">
+                
+                    <a href="/" class="navbar-menu button">Home</a>
+                
+                    <a href="/tags/" class="navbar-menu button">Tags</a>
+                
+                    <a href="/archives/" class="navbar-menu button">Archives</a>
+                
+                    <a href="/friends/" class="navbar-menu button">Friends</a>
+                
+                    <a href="/page/" class="navbar-menu button">Page</a>
+                
+            </div>
+        
+        
+        
+    <a href="/search/" id="btn-search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="32"><path d="M192 448c0-141.152 114.848-256 256-256s256 114.848 256 256-114.848 256-256 256-256-114.848-256-256z m710.624 409.376l-206.88-206.88A318.784 318.784 0 0 0 768 448c0-176.736-143.264-320-320-320S128 271.264 128 448s143.264 320 320 320a318.784 318.784 0 0 0 202.496-72.256l206.88 206.88 45.248-45.248z"></path></svg>
+    </a>
+
+
+        
+        
+    <a href="javaScript:void(0);" id="btn-toggle-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </a>
+
+
+        
+            <a class="dropdown-icon button" id="btn-dropdown" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path></svg></a>
+            <div class="dropdown-menus" id="dropdown-menus">
+                
+                    <a href="/" class="dropdown-menu button">Home</a>
+                
+                    <a href="/tags/" class="dropdown-menu button">Tags</a>
+                
+                    <a href="/archives/" class="dropdown-menu button">Archives</a>
+                
+                    <a href="/friends/" class="dropdown-menu button">Friends</a>
+                
+                    <a href="/page/" class="dropdown-menu button">Page</a>
+                
+            </div>
+        
+    </div>
+</header>
+
+
+            <main class="main">
+    
+
+<div class="post-title">
+    <h1 class="post-title__text">
+        抽离组件——Uploader组件
+    </h1>
+    <div class="post-title__meta">
+        <a href="/archives/2022/11/" class="post-meta__date button">2022-11-03</a>
+        
+ 
+        
+    
+    
+
+
+ 
+
+ 
+    </div>
+</div>
+
+
+    <aside class="post-side">
+        <div class="post-side__toc">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">上传文件的两种实现方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Form-submission"><span class="toc-number">1.1.</span> <span class="toc-text">Form-submission</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JavaScript%E5%8F%91%E9%80%81%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82"><span class="toc-number">1.2.</span> <span class="toc-text">JavaScript发送异步请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Uploader%E7%BB%84%E4%BB%B6%E9%9C%80%E6%B1%82%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">Uploader组件需求设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%97%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD"><span class="toc-number">2.1.</span> <span class="toc-text">接受验证功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%90%8E%E7%AB%AFurl"><span class="toc-number">2.2.</span> <span class="toc-text">自定义后端url</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E6%88%90%E5%8A%9F%E5%92%8C%E5%A4%B1%E8%B4%A5%E4%BA%8B%E4%BB%B6%E5%92%8C%E6%94%B9%E5%8F%98%E7%8A%B6%E6%80%81"><span class="toc-number">2.3.</span> <span class="toc-text">发送成功和失败事件和改变状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E6%88%90%E5%8A%9F%E5%90%8E%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87"><span class="toc-number">2.4.</span> <span class="toc-text">上传成功后显示上传图片</span></a></li></ol></li></ol>
+        </div>
+    </aside>
+    <a class="btn-toc button" id="btn-toc" tabindex="0">
+        <svg viewBox="0 0 1024 1024" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M128 256h64V192H128zM320 256h576V192H320zM128 544h64v-64H128zM320 544h576v-64H320zM128 832h64v-64H128zM320 832h576v-64H320z" fill="currentColor"></path>
+        </svg>
+    </a>
+    <div class="toc-menus" id="toc-menus">
+        <div class="toc-title">Article Directory</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">上传文件的两种实现方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Form-submission"><span class="toc-number">1.1.</span> <span class="toc-text">Form-submission</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JavaScript%E5%8F%91%E9%80%81%E5%BC%82%E6%AD%A5%E8%AF%B7%E6%B1%82"><span class="toc-number">1.2.</span> <span class="toc-text">JavaScript发送异步请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Uploader%E7%BB%84%E4%BB%B6%E9%9C%80%E6%B1%82%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.</span> <span class="toc-text">Uploader组件需求设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E5%8F%97%E9%AA%8C%E8%AF%81%E5%8A%9F%E8%83%BD"><span class="toc-number">2.1.</span> <span class="toc-text">接受验证功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E5%90%8E%E7%AB%AFurl"><span class="toc-number">2.2.</span> <span class="toc-text">自定义后端url</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E6%88%90%E5%8A%9F%E5%92%8C%E5%A4%B1%E8%B4%A5%E4%BA%8B%E4%BB%B6%E5%92%8C%E6%94%B9%E5%8F%98%E7%8A%B6%E6%80%81"><span class="toc-number">2.3.</span> <span class="toc-text">发送成功和失败事件和改变状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E6%88%90%E5%8A%9F%E5%90%8E%E6%98%BE%E7%A4%BA%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87"><span class="toc-number">2.4.</span> <span class="toc-text">上传成功后显示上传图片</span></a></li></ol></li></ol>
+    </div>
+
+
+<article class="post post__with-toc content-card">
+    <div class="post__header"></div>
+    <div class="post__content">
+        <h2 id="上传文件的两种实现方式"><a href="#上传文件的两种实现方式" class="headerlink" title="上传文件的两种实现方式"></a>上传文件的两种实现方式</h2><ol>
+<li><p>form-submission</p>
+</li>
+<li><p>JavaScript发送异步请求</p>
+</li>
+</ol>
+<h3 id="Form-submission"><a href="#Form-submission" class="headerlink" title="Form-submission"></a>Form-submission</h3><p>使用<code>&lt;form&gt;</code>标签。</p>
+<p>跟普通的字符串不同，文件是二进制格式，所以要额外设置<code>enctype=&#39;multipart/form-data&#39;</code>。</p>
+<p>关于 POST encType 的描述:<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods/POST">POST - HTTP | MDN</a></p>
+<ul>
+<li>application&#x2F;x-www-form-urlencoded: 数据被编码成以 ‘&amp;’ 分隔的键-值对, 同时以 ‘&#x3D;’ 分隔键和值. 非字母或数字的字符会被 percent-encoding: 这也就是为什么这种类型不支持二进制数据(应使用 multipart&#x2F;form-data 代替).</li>
+<li>multipart&#x2F;form-data</li>
+<li>text&#x2F;plain</li>
+</ul>
+<p>具体例子：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">//form中的action属性指向submit后发送到的后端url</span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">method</span>=<span class="string">&#x27;post&#x27;</span> <span class="attr">enctype</span>=<span class="string">&#x27;multipart/form-data&#x27;</span> <span class="attr">acion</span>=<span class="string">&#x27;/api/upload&#x27;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">file</span> /&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">type</span>=<span class="string">&#x27;submit&#x27;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JavaScript发送异步请求"><a href="#JavaScript发送异步请求" class="headerlink" title="JavaScript发送异步请求"></a>JavaScript发送异步请求</h3><p>监听<code>input</code>的<code>change</code>事件</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">handleFileChange</span> = (<span class="params">e:Event</span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> target = e.<span class="property">target</span> <span class="keyword">as</span> <span class="title class_">HTMLInputElement</span>;</span><br><span class="line">    <span class="keyword">const</span> files = target.<span class="property">files</span>; </span><br><span class="line">    <span class="comment">//因为可以上传多个文件，files为array-like object，可以使用Array.from()转换为数组</span></span><br><span class="line">    <span class="comment">//只选取第一个文件可以用files[0]</span></span><br><span class="line">    <span class="keyword">if</span>(files)&#123;</span><br><span class="line">    <span class="keyword">const</span> uploadedFile = files[<span class="number">0</span>];</span><br><span class="line">    <span class="comment">//模拟表单数据，使用FormData对象，可以很方便地以JavaScript创建HTML&lt;form&gt;这个data</span></span><br><span class="line">    <span class="keyword">const</span> formData = <span class="keyword">new</span> <span class="title class_">FormData</span>();</span><br><span class="line">    <span class="comment">//使用append方法添加新的属性值。</span></span><br><span class="line">    <span class="comment">//formData.append(name,value)</span></span><br><span class="line">    formData.<span class="title function_">append</span>(uploadedFile.<span class="property">name</span>, uploadedFile);</span><br><span class="line">    <span class="comment">//发送该表单数据请求（POST）</span></span><br><span class="line">    axios.<span class="title function_">post</span>(<span class="string">&#x27;/upload&#x27;</span>, formData, &#123;</span><br><span class="line">    <span class="comment">//第三个参数为config，设置header转换格式。</span></span><br><span class="line">    <span class="attr">headers</span>:&#123;</span><br><span class="line">    <span class="string">&#x27;Content-Type&#x27;</span>:<span class="string">&#x27;multipart/form-data&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;).<span class="title function_">then</span>(...)</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Uploader组件需求设计"><a href="#Uploader组件需求设计" class="headerlink" title="Uploader组件需求设计"></a>Uploader组件需求设计</h2><ol>
+<li><p>接受验证功能 &#x3D;&gt; 验证文件的格式&#x2F;大小</p>
+</li>
+<li><p>接受action &#x3D;&gt; 自定义后端url</p>
+</li>
+<li><p>发送事件 &#x3D;&gt; 上传成功事件和上传失败事件</p>
+</li>
+<li><p>有状态 &#x3D;&gt; 上传前、中、后</p>
+</li>
+<li><p>上传成功后，显示上传图片</p>
+</li>
+</ol>
+<h3 id="接受验证功能"><a href="#接受验证功能" class="headerlink" title="接受验证功能"></a>接受验证功能</h3><p>CheckFuntion应该在上传文件前进行调用，因此设置一个props为beforeUploaded接受一个验证函数，参数为文件，结果为布尔值，验证通过提交文件，否则return。</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">type</span> <span class="title class_">CheckFuntion</span> = <span class="function">(<span class="params">file:File</span>) =&gt;</span> <span class="built_in">boolean</span>;</span><br><span class="line"><span class="attr">props</span>:&#123;</span><br><span class="line">    <span class="attr">beforeUploaded</span>:&#123;</span><br><span class="line">    <span class="attr">type</span>: <span class="title class_">Funtion</span> <span class="keyword">as</span> <span class="title class_">PropType</span>&lt;<span class="title class_">CheckFuntion</span>&gt;,</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 在setup中handleFileChange函数中进行验证</span></span><br><span class="line"><span class="keyword">if</span> (props.<span class="property">beforeUploaded</span>)&#123;</span><br><span class="line">    <span class="keyword">const</span> result = props.<span class="title function_">beforeUploaded</span>(selectedFile);</span><br><span class="line">    <span class="keyword">if</span>(!result)&#123;<span class="keyword">return</span>;&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//...</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义后端url"><a href="#自定义后端url" class="headerlink" title="自定义后端url"></a>自定义后端url</h3><p>props接受action，类型为<code>String</code>，在axios.post时调用。</p>
+<h3 id="发送成功和失败事件和改变状态"><a href="#发送成功和失败事件和改变状态" class="headerlink" title="发送成功和失败事件和改变状态"></a>发送成功和失败事件和改变状态</h3><p>在Promise的then和catch中分别emit相关事件，传入成功值和错误，并改变状态值。</p>
+<h3 id="上传成功后显示上传图片"><a href="#上传成功后显示上传图片" class="headerlink" title="上传成功后显示上传图片"></a>上传成功后显示上传图片</h3><p>具体文档：<a target="_blank" rel="noopener" href="https://cn.vuejs.org/guide/components/slots.html#scoped-slots">插槽 Slots | Vue.js</a></p>
+<p>插槽的内容同时使用父组件域内和子组件域内的数据，要做到这一点，我们需要一种方法来让子组件在渲染时将一部分数据提供给插槽。</p>
+<p>因此，要向上传成功插槽的出口上传递 attributes：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line">&lt;slot</span><br><span class="line">        v-<span class="keyword">else</span>-<span class="keyword">if</span>=<span class="string">&quot;uploadStatus === &#x27;success&#x27;&quot;</span></span><br><span class="line">        name=<span class="string">&quot;uploaded&quot;</span>  </span><br><span class="line">        <span class="comment">//uploadData在axios.post请求成功返回后赋值</span></span><br><span class="line">        :uploadData=<span class="string">&quot;uploadData&quot;</span></span><br><span class="line">      &gt;</span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;btn btn-primary&quot;</span>&gt;</span>上传成功<span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">      &lt;/slot&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在使用此插槽的组件，即CreatePost中通过子组件标签上的 <code>v-slot</code> 指令，直接接收到了一个插槽 props 对象：</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line">&lt;template #uploaded=<span class="string">&quot;dataProps&quot;</span>&gt;</span><br><span class="line">        <span class="comment">//可以直接使用，然后使用img标签显示</span></span><br><span class="line">        <span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">:src</span>=<span class="string">&quot;dataProps.uploadData.data.url&quot;</span> /&gt;</span></span></span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>子组件传入插槽的 props 作为了 <code>v-slot</code> 指令的值，可以在插槽内的表达式中访问。</p>
+
+    </div>
+    
+    <div class="post__license">
+        <p>
+            <strong>Author: </strong>Loploop
+        </p>
+        <p>
+            <strong>
+                Permalink: 
+            </strong>
+            <a href="https://kukupii.github.io/2022/11/03/%E6%8A%BD%E7%A6%BB%E7%BB%84%E4%BB%B6%E2%80%94%E2%80%94Uploader%E7%BB%84%E4%BB%B6/">https://kukupii.github.io/2022/11/03/%E6%8A%BD%E7%A6%BB%E7%BB%84%E4%BB%B6%E2%80%94%E2%80%94Uploader%E7%BB%84%E4%BB%B6/</a>
+        </p>
+        
+    </div>
+ 
+    <div class="post-footer__meta"><p>updated at 2022-11-17</p></div> 
+    <div class="post-entry__tags"><a href="/tags/typescript/" class="post-tags__link button"># typescript</a><a href="/tags/vue/" class="post-tags__link button"># vue</a><a href="/tags/zheye/" class="post-tags__link button"># zheye</a><a href="/tags/component/" class="post-tags__link button"># component</a><a href="/tags/conclusion/" class="post-tags__link button"># conclusion</a></div> 
+</article>
+
+
+    <div class="nav">
+        <div class="nav__prev">
+            
+                <a href="/2022/11/17/js30%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%8801~05%EF%BC%89/" class="nav__link">
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M589.088 790.624L310.464 512l278.624-278.624 45.248 45.248L400.96 512l233.376 233.376z" fill="#808080"></path></svg>
+                    </div>
+                    <div>
+                        <div class="nav__label">
+                            Previous Post
+                        </div>
+                        <div class="nav__title">
+                            js30学习笔记（01~05）
+                        </div>
+                    </div>
+                </a>
+            
+        </div>
+        <div class="nav__next">
+            
+                <a href="/2022/10/30/%E9%80%9A%E7%94%A8%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E2%80%94%E2%80%94axios%E6%8B%A6%E6%88%AA/" class="nav__link">
+                    <div>
+                        <div class="nav__label">
+                            Next Post
+                        </div>
+                        <div class="nav__title">
+                            通用错误处理——axios拦截
+                        </div>
+                    </div>
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M434.944 790.624l-45.248-45.248L623.04 512l-233.376-233.376 45.248-45.248L713.568 512z" fill="#808080"></path></svg>
+                    </div>
+                </a>
+            
+        </div>
+    </div>
+
+
+
+    <div class="post__comments post__with-toc content-card" id="comment">
+        
+    <h4>Comments</h4>
+    
+    <div id="disqus_thread">Unable to load Disqus, please make sure your network can access.</div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    </div>
+
+
+
+</main>
+
+            <footer class="footer">
+     
+    <a href="#" class="button" id="b2t" aria-label="Back to Top" title="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="32" height="32">
+            <path d="M233.376 722.752L278.624 768 512 534.624 745.376 768l45.248-45.248L512 444.128zM192 352h640V288H192z" fill="currentColor"></path>
+        </svg>
+    </a>
+
+    
+
+
+    
+     
+ 
+
+ 
+    
+        
+        <p class="footer-copyright">
+            Copyright © 2022&nbsp;-&nbsp;2023 <a href="/">Loplooop</a>
+        </p>
+    
+    
+    <p>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme - <a href="https://github.com/ChrAlpha/hexo-theme-cards" target="_blank">Cards</a></p>
+</footer>
+
+        </div>
+        
+    <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+    <script>
+        window.lazyLoadOptions = {
+            elements_selector: ".lazy",
+            threshold: 0
+        };
+    </script>
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+    
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+    
+    <script>
+        function loadComment() {
+            window.disqus_config = function () {
+                this.page.url = 'https://kukupii.github.io/2022/11/03/%E6%8A%BD%E7%A6%BB%E7%BB%84%E4%BB%B6%E2%80%94%E2%80%94Uploader%E7%BB%84%E4%BB%B6/';
+                this.page.identifier = '2022/11/03/抽离组件——Uploader组件/';
+            };
+            (function(){
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + 'https-kukupii-github-io' + '.disqus.com/embed.js';
+                (document.head || document.body).appendChild(dsq);
+            })();
+        }
+    
+        var runningOnBrowser = typeof window !== "undefined";
+        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
+    
+        setTimeout(function () {
+            if (!isBot && supportsIntersectionObserver) {
+                var comment_observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting) {
+                        loadComment();
+                        comment_observer.disconnect();
+                    }
+                }, { threshold: [0] });
+                comment_observer.observe(document.getElementById('comment'));
+            } else {
+                loadComment();
+            }
+        }, 1);
+    </script>
+
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+
+
+
+    </body>
+</html>

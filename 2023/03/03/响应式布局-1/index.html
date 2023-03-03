@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+
+    
+
+    <!-- 渲染优化 -->
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="HandheldFriendly" content="True" >
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--icon-->
+
+    
+        <link rel="shortcut icon" href="/favicon.ico">
+    
+    
+    
+    
+    
+
+
+    <!-- meta -->
+
+
+<title>响应式布局 | Loplooop</title>
+
+
+    <meta name="keywords" content="css">
+
+
+
+
+    <!-- OpenGraph -->
+ 
+    <meta name="description" content="响应式布局 媒体查询 mediaQuery什么是媒体查询概念：为不同尺寸的屏幕设定不同的CSS样式 简单案例： #div0&amp;#123;    width:100px;    height:200px;&amp;#125;&#x2F;&#x2F; 在屏幕宽度为200px到300px之间时，#div0的背景颜色为红色@media screen and (min-device-iwdth:200px) and (max-devic">
+<meta property="og:type" content="article">
+<meta property="og:title" content="响应式布局">
+<meta property="og:url" content="https://kukupii.github.io/2023/03/03/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80-1/index.html">
+<meta property="og:site_name" content="Loplooop">
+<meta property="og:description" content="响应式布局 媒体查询 mediaQuery什么是媒体查询概念：为不同尺寸的屏幕设定不同的CSS样式 简单案例： #div0&amp;#123;    width:100px;    height:200px;&amp;#125;&#x2F;&#x2F; 在屏幕宽度为200px到300px之间时，#div0的背景颜色为红色@media screen and (min-device-iwdth:200px) and (max-devic">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-03T06:10:33.000Z">
+<meta property="article:modified_time" content="2023-03-03T06:12:08.606Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="css">
+<meta name="twitter:card" content="summary_large_image">
+
+
+    
+<link rel="stylesheet" href="/css/style/main.css">
+ 
+
+    
+    
+        <link rel="stylesheet" id="hl-default-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/github.min.css" media="none" >
+        
+            <link rel="stylesheet" id="hl-dark-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/atom-one-dark-reasonable.min.css" media="none">
+        
+    
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/style/dark.min.css">
+
+    
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/js/darkmode.min.js"></script>
+
+
+
+     
+
+    <!-- custom head -->
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Loplooop" type="application/atom+xml">
+</head>
+
+    <body>
+        <div id="app" tabindex="-1">
+            <header class="header">
+    <div class="header__left">
+        <a href="/" class="button">
+            <span class="logo__text">Loploop</span>
+        </a>
+    </div>
+    <div class="header__right">
+        
+            <div class="navbar__menus">
+                
+                    <a href="/" class="navbar-menu button">Home</a>
+                
+                    <a href="/tags/" class="navbar-menu button">Tags</a>
+                
+                    <a href="/archives/" class="navbar-menu button">Archives</a>
+                
+                    <a href="/friends/" class="navbar-menu button">Friends</a>
+                
+                    <a href="/page/" class="navbar-menu button">Page</a>
+                
+            </div>
+        
+        
+        
+    <a href="/search/" id="btn-search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="32"><path d="M192 448c0-141.152 114.848-256 256-256s256 114.848 256 256-114.848 256-256 256-256-114.848-256-256z m710.624 409.376l-206.88-206.88A318.784 318.784 0 0 0 768 448c0-176.736-143.264-320-320-320S128 271.264 128 448s143.264 320 320 320a318.784 318.784 0 0 0 202.496-72.256l206.88 206.88 45.248-45.248z"></path></svg>
+    </a>
+
+
+        
+        
+    <a href="javaScript:void(0);" id="btn-toggle-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </a>
+
+
+        
+            <a class="dropdown-icon button" id="btn-dropdown" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path></svg></a>
+            <div class="dropdown-menus" id="dropdown-menus">
+                
+                    <a href="/" class="dropdown-menu button">Home</a>
+                
+                    <a href="/tags/" class="dropdown-menu button">Tags</a>
+                
+                    <a href="/archives/" class="dropdown-menu button">Archives</a>
+                
+                    <a href="/friends/" class="dropdown-menu button">Friends</a>
+                
+                    <a href="/page/" class="dropdown-menu button">Page</a>
+                
+            </div>
+        
+    </div>
+</header>
+
+
+            <main class="main">
+    
+
+<div class="post-title">
+    <h1 class="post-title__text">
+        响应式布局
+    </h1>
+    <div class="post-title__meta">
+        <a href="/archives/2023/03/" class="post-meta__date button">2023-03-03</a>
+        
+ 
+        
+    
+    
+
+
+ 
+
+ 
+    </div>
+</div>
+
+
+    <aside class="post-side">
+        <div class="post-side__toc">
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2-mediaQuery"><span class="toc-number">1.</span> <span class="toc-text">媒体查询 mediaQuery</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.</span> <span class="toc-text">什么是媒体查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#media%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">@media常用参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2%E5%BC%95%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">媒体查询引入方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flex%E5%BC%B9%E6%80%A7%E5%B8%83%E5%B1%80"><span class="toc-number">2.</span> <span class="toc-text">flex弹性布局</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#for-parent-element"><span class="toc-number">2.1.</span> <span class="toc-text">for parent element</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BB%E8%BD%B4%E6%96%B9%E5%90%91%E4%B8%8E%E6%8D%A2%E8%A1%8C"><span class="toc-number">2.1.1.</span> <span class="toc-text">主轴方向与换行</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%89%A9%E4%BD%99%E7%A9%BA%E9%97%B4%E8%B0%83%E6%95%B4%E4%B8%BA%E9%97%B4%E8%B7%9D"><span class="toc-number">2.1.2.</span> <span class="toc-text">剩余空间调整为间距</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for-children-elements"><span class="toc-number">2.2.</span> <span class="toc-text">for children elements</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rem"><span class="toc-number">3.</span> <span class="toc-text">rem</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E5%B8%83%E5%B1%80"><span class="toc-number">4.</span> <span class="toc-text">自适应布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80"><span class="toc-number">5.</span> <span class="toc-text">响应式布局</span></a></li></ol>
+        </div>
+    </aside>
+    <a class="btn-toc button" id="btn-toc" tabindex="0">
+        <svg viewBox="0 0 1024 1024" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M128 256h64V192H128zM320 256h576V192H320zM128 544h64v-64H128zM320 544h576v-64H320zM128 832h64v-64H128zM320 832h576v-64H320z" fill="currentColor"></path>
+        </svg>
+    </a>
+    <div class="toc-menus" id="toc-menus">
+        <div class="toc-title">Article Directory</div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2-mediaQuery"><span class="toc-number">1.</span> <span class="toc-text">媒体查询 mediaQuery</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2"><span class="toc-number">1.1.</span> <span class="toc-text">什么是媒体查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#media%E5%B8%B8%E7%94%A8%E5%8F%82%E6%95%B0"><span class="toc-number">1.2.</span> <span class="toc-text">@media常用参数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AA%92%E4%BD%93%E6%9F%A5%E8%AF%A2%E5%BC%95%E5%85%A5%E6%96%B9%E5%BC%8F"><span class="toc-number">1.3.</span> <span class="toc-text">媒体查询引入方式</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flex%E5%BC%B9%E6%80%A7%E5%B8%83%E5%B1%80"><span class="toc-number">2.</span> <span class="toc-text">flex弹性布局</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#for-parent-element"><span class="toc-number">2.1.</span> <span class="toc-text">for parent element</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BB%E8%BD%B4%E6%96%B9%E5%90%91%E4%B8%8E%E6%8D%A2%E8%A1%8C"><span class="toc-number">2.1.1.</span> <span class="toc-text">主轴方向与换行</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%89%A9%E4%BD%99%E7%A9%BA%E9%97%B4%E8%B0%83%E6%95%B4%E4%B8%BA%E9%97%B4%E8%B7%9D"><span class="toc-number">2.1.2.</span> <span class="toc-text">剩余空间调整为间距</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for-children-elements"><span class="toc-number">2.2.</span> <span class="toc-text">for children elements</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rem"><span class="toc-number">3.</span> <span class="toc-text">rem</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E9%80%82%E5%BA%94%E5%B8%83%E5%B1%80"><span class="toc-number">4.</span> <span class="toc-text">自适应布局</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80"><span class="toc-number">5.</span> <span class="toc-text">响应式布局</span></a></li></ol>
+    </div>
+
+
+<article class="post post__with-toc content-card">
+    <div class="post__header"></div>
+    <div class="post__content">
+        <p>响应式布局</p>
+<h3 id="媒体查询-mediaQuery"><a href="#媒体查询-mediaQuery" class="headerlink" title="媒体查询 mediaQuery"></a>媒体查询 mediaQuery</h3><h4 id="什么是媒体查询"><a href="#什么是媒体查询" class="headerlink" title="什么是媒体查询"></a>什么是媒体查询</h4><p>概念：为不同尺寸的屏幕设定不同的CSS样式</p>
+<p>简单案例：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="selector-id">#div0</span>&#123;</span><br><span class="line">    <span class="attribute">width</span>:<span class="number">100px</span>;</span><br><span class="line">    <span class="attribute">height</span>:<span class="number">200px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 在屏幕宽度为<span class="number">200px</span>到<span class="number">300px</span>之间时，<span class="selector-id">#div0</span>的背景颜色为红色</span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-device-iwdth</span>:<span class="number">200px</span>) <span class="keyword">and</span> (<span class="attribute">max-device-iwdth</span>:<span class="number">300px</span>)&#123;</span><br><span class="line">    <span class="selector-id">#div0</span>&#123;</span><br><span class="line">        <span class="attribute">background-color</span>:red;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 在屏幕宽度为<span class="number">301px</span>到<span class="number">500px</span>之间时，<span class="selector-id">#div0</span>的背景颜色为绿色</span><br><span class="line"><span class="keyword">@media</span> screen <span class="keyword">and</span> (<span class="attribute">min-device-iwdth</span>:<span class="number">301px</span>) <span class="keyword">and</span> (<span class="attribute">max-device-iwdth</span>:<span class="number">500px</span>)&#123;</span><br><span class="line">    <span class="selector-id">#div0</span>&#123;</span><br><span class="line">        <span class="attribute">background-color</span>:green;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="media常用参数"><a href="#media常用参数" class="headerlink" title="@media常用参数"></a>@media常用参数</h4><p>width, height &#x3D;&gt; 浏览器可视宽度，高度</p>
+<p>device-width, device-height &#x3D;&gt; 设备屏幕的宽度，高度</p>
+<h4 id="媒体查询引入方式"><a href="#媒体查询引入方式" class="headerlink" title="媒体查询引入方式"></a>媒体查询引入方式</h4><ol>
+<li><p>写在<code>style</code>标签中，有条件的执行某个内部样式表。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span> <span class="attr">media</span>=<span class="string">&quot;(min-device-width:100px) and (max-device-iwdth:300px)&quot;</span>&gt;</span></span><br><span class="line">  #div0&#123;</span><br><span class="line">      ...</span><br><span class="line">  &#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>link</code>引入，写在link标签中，有条件的引入外部样式表。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;css/test.css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;css/css-1.css&quot;</span> <span class="attr">rel</span>=<span class="string">&quot;stylesheet&quot;</span> </span></span><br><span class="line"><span class="tag">        <span class="attr">media</span>=<span class="string">&quot;(min-device-width:100px) and (max-device-iwdth:300px)&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="flex弹性布局"><a href="#flex弹性布局" class="headerlink" title="flex弹性布局"></a>flex弹性布局</h3><h4 id="for-parent-element"><a href="#for-parent-element" class="headerlink" title="for parent element"></a>for parent element</h4><h5 id="主轴方向与换行"><a href="#主轴方向与换行" class="headerlink" title="主轴方向与换行"></a>主轴方向与换行</h5><p><strong>flex-direction</strong>：子元素在父元素盒子中的排列方式</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>row</td>
+<td>默认值。灵活的项目将水平显示，正如一个行一样。</td>
+</tr>
+<tr>
+<td>row-reverse</td>
+<td>与 row 相同，但是以相反的顺序。</td>
+</tr>
+<tr>
+<td>column</td>
+<td>灵活的项目将垂直显示，正如一个列一样。</td>
+</tr>
+<tr>
+<td>column-reverse</td>
+<td>与 column 相同，但是以相反的顺序。</td>
+</tr>
+<tr>
+<td>initial</td>
+<td>设置该属性为它的默认值。请参阅 <a target="_blank" rel="noopener" href="http://edu.jb51.net/cssref/cssref-initial.html"><em>initial</em></a>。</td>
+</tr>
+<tr>
+<td>inherit</td>
+<td>从父元素继承该属性。请参阅 <a target="_blank" rel="noopener" href="http://edu.jb51.net/cssref/cssref-inherit.html"><em>inherit</em></a>。</td>
+</tr>
+</tbody></table>
+<p><strong>flex-wrap</strong>：子元素在父元素盒子里是否换行（列）</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>nowrap</td>
+<td>默认值。不换行或不换列。</td>
+</tr>
+<tr>
+<td>wrap</td>
+<td>换行或换列。</td>
+</tr>
+<tr>
+<td>wrap-reverse</td>
+<td>换行或换列，但以相反的顺序。</td>
+</tr>
+</tbody></table>
+<p><strong>flex-flow</strong>：flex-direction和flex-wrap属性的简写形式。eg: flex-flow: row wrap;</p>
+<h5 id="剩余空间调整为间距"><a href="#剩余空间调整为间距" class="headerlink" title="剩余空间调整为间距"></a>剩余空间调整为间距</h5><p><strong>justify-content</strong>：用来在存在剩余空间时，设置为间距的方式。</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flex-start</td>
+<td>默认值。从左到右，挨着行的开头。</td>
+</tr>
+<tr>
+<td>flex-end</td>
+<td>从右到左，挨着行的结尾。</td>
+</tr>
+<tr>
+<td>center</td>
+<td>居中显示。</td>
+</tr>
+<tr>
+<td>space-between</td>
+<td>平均分布在该行上，两边不留间隔空间。</td>
+</tr>
+<tr>
+<td>space-around</td>
+<td>平均分布在该行上，两边留一半的间隔空间。</td>
+</tr>
+</tbody></table>
+<p><strong>align-items</strong>：设置每个flex元素在交叉轴上的默认对齐方式（单行，多行中单独处理每一行）</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flex-start</td>
+<td>位于容器的开头。</td>
+</tr>
+<tr>
+<td>flex-end</td>
+<td>位于容器的结尾。</td>
+</tr>
+<tr>
+<td>center</td>
+<td>居中显示。</td>
+</tr>
+</tbody></table>
+<p><strong>align-content</strong>：设置每个flex元素在交叉轴上的默认对齐方式（把多行当作一个整体处理）</p>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flex-start</td>
+<td>位于容器的开头。</td>
+</tr>
+<tr>
+<td>flex-end</td>
+<td>位于容器的结尾。</td>
+</tr>
+<tr>
+<td>center</td>
+<td>居中显示。</td>
+</tr>
+<tr>
+<td>space-between</td>
+<td>之间留有空白。</td>
+</tr>
+<tr>
+<td>space-around</td>
+<td>两端留有空白。</td>
+</tr>
+</tbody></table>
+<h4 id="for-children-elements"><a href="#for-children-elements" class="headerlink" title="for children elements"></a>for children elements</h4><table>
+<thead>
+<tr>
+<th>属性值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flex-basis</td>
+<td>设置弹性盒伸缩基准值。（相当于宽度，设置基准值后，宽度不再生效）</td>
+</tr>
+<tr>
+<td>flex-grow</td>
+<td>设置弹性盒子的扩展比率。</td>
+</tr>
+<tr>
+<td>flex-shrink</td>
+<td>设置弹性盒子的缩小比率。</td>
+</tr>
+<tr>
+<td>flex</td>
+<td>上面三者的缩写。</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flex:auto;</td>
+<td>flex:1 1 auto;</td>
+</tr>
+<tr>
+<td>flex:none;</td>
+<td>flex:0 0 auto;</td>
+</tr>
+<tr>
+<td>flex:0%;</td>
+<td>flex:1 1 0%;</td>
+</tr>
+<tr>
+<td>flex:100px;</td>
+<td>flex:1 1 100px;</td>
+</tr>
+<tr>
+<td>flex:1;</td>
+<td>flex:1 1 0%;</td>
+</tr>
+</tbody></table>
+<h3 id="rem"><a href="#rem" class="headerlink" title="rem"></a>rem</h3><p>概念：指相对于根元素的字体大小的单位</p>
+<p>使用媒体查询+rem或js，在不同宽度的视口下自动调整字体大小。</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">style</span>&gt;</span><span class="language-css"></span></span><br><span class="line"><span class="language-css">      <span class="selector-tag">div</span> &#123;</span></span><br><span class="line"><span class="language-css">        <span class="attribute">font-size</span>: <span class="number">1rem</span>;</span></span><br><span class="line"><span class="language-css">      &#125;</span></span><br><span class="line"><span class="language-css">    </span><span class="tag">&lt;/<span class="name">style</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">      <span class="keyword">const</span> <span class="title function_">changeRootFontSize</span> = (<span class="params"></span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">//获取设备的宽度</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">let</span> deviceWidth = <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">clientWidth</span>;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">//假定以20px的字体为默认大小，当前的宽度除以默认宽度。一般字体最大为40px，超过时直接取40；</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">let</span> fontSize =</span></span><br><span class="line"><span class="language-javascript">          <span class="number">20</span> * (deviceWidth / <span class="number">320</span>) &gt; <span class="number">40</span> ? <span class="number">40</span> : <span class="number">20</span> * (deviceWidth / <span class="number">360</span>);</span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">document</span>.<span class="property">documentElement</span>.<span class="property">style</span>.<span class="property">fontSize</span> = fontSize +         <span class="string">&quot;px&quot;</span>;</span></span><br><span class="line"><span class="language-javascript">      &#125;;</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;load&quot;</span>, changeRootFontSize);</span></span><br><span class="line"><span class="language-javascript">      <span class="variable language_">window</span>.<span class="title function_">addEventListener</span>(<span class="string">&quot;resize&quot;</span>, changeRootFontSize);</span></span><br><span class="line"><span class="language-javascript">    </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="自适应布局"><a href="#自适应布局" class="headerlink" title="自适应布局"></a>自适应布局</h3><p>布局特点：</p>
+<ol>
+<li><p>不同设备对应不同的htm</p>
+</li>
+<li><p>局部自适应：例如三栏布局，中间一栏随尺寸大小伸缩。</p>
+</li>
+</ol>
+<p>主要通过js判断设备的类型或控制局部的变化</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">const</span> <span class="title function_">redirect</span> = (<span class="params"></span>) =&gt; &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">//获取设备信息</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">let</span> userAgent = navigator.<span class="property">userAgent</span>.<span class="title function_">toLowerCase</span>();</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">//正则表达式来判断设备类型</span></span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">let</span> device = <span class="regexp">/ipad|iphone|midp|windows ce/</span>;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">if</span>(device.<span class="title function_">test</span>(userAgent))&#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">//跳转到移动端页面</span></span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&quot;move.html&quot;</span></span></span><br><span class="line"><span class="language-javascript">        &#125;<span class="keyword">else</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="comment">//跳转到pc端页面</span></span></span><br><span class="line"><span class="language-javascript">            <span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&quot;pc.html&quot;</span></span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>三栏布局类型：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">//外部大容器</span><br><span class="line"> <span class="selector-class">.div0</span> &#123;</span><br><span class="line">   <span class="attribute">display</span>: flex;</span><br><span class="line"> &#125;</span><br><span class="line"> //两侧不变，中间伸缩</span><br><span class="line"> <span class="selector-class">.div0</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child</span>(<span class="number">1</span>) &#123;</span><br><span class="line">   <span class="attribute">background-color</span>: antiquewhite;</span><br><span class="line">   <span class="attribute">flex</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">50px</span>;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="selector-class">.div0</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>) &#123;</span><br><span class="line">   <span class="attribute">background-color</span>: aqua;</span><br><span class="line">   <span class="attribute">flex</span>: <span class="number">1</span> <span class="number">1</span> auto;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="selector-class">.div0</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child</span>(<span class="number">3</span>) &#123;</span><br><span class="line">   <span class="attribute">background-color</span>: antiquewhite;</span><br><span class="line">   <span class="attribute">flex</span>: <span class="number">0</span> <span class="number">0</span> <span class="number">50px</span>;</span><br><span class="line"> &#125;</span><br><span class="line"> //配合媒体查询</span><br><span class="line"> <span class="keyword">@media</span> (<span class="attribute">min-device-width</span>: <span class="number">400px</span>) <span class="keyword">and</span> (<span class="attribute">max-device-width</span>: <span class="number">500px</span>) &#123;</span><br><span class="line">   <span class="selector-class">.div0</span> <span class="selector-tag">div</span><span class="selector-pseudo">:nth-child</span>(<span class="number">2</span>) &#123;</span><br><span class="line">     <span class="attribute">background-color</span>: blueviolet;</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="响应式布局"><a href="#响应式布局" class="headerlink" title="响应式布局"></a>响应式布局</h3><p>确保一个页面在所有终端上，都能显示出令人满意的效果。</p>
+<p>以%或rem为单位；</p>
+
+    </div>
+    
+    <div class="post__license">
+        <p>
+            <strong>Author: </strong>Loploop
+        </p>
+        <p>
+            <strong>
+                Permalink: 
+            </strong>
+            <a href="https://kukupii.github.io/2023/03/03/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80-1/">https://kukupii.github.io/2023/03/03/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80-1/</a>
+        </p>
+        
+    </div>
+ 
+    <div class="post-footer__meta"><p>updated at 2023-03-03</p></div> 
+    <div class="post-entry__tags"><a href="/tags/css/" class="post-tags__link button"># css</a></div> 
+</article>
+
+
+    <div class="nav">
+        <div class="nav__prev">
+            
+        </div>
+        <div class="nav__next">
+            
+                <a href="/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/" class="nav__link">
+                    <div>
+                        <div class="nav__label">
+                            Next Post
+                        </div>
+                        <div class="nav__title">
+                            Vue源码阅读笔记
+                        </div>
+                    </div>
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M434.944 790.624l-45.248-45.248L623.04 512l-233.376-233.376 45.248-45.248L713.568 512z" fill="#808080"></path></svg>
+                    </div>
+                </a>
+            
+        </div>
+    </div>
+
+
+
+    <div class="post__comments post__with-toc content-card" id="comment">
+        
+    <h4>Comments</h4>
+    
+    <div id="disqus_thread">Unable to load Disqus, please make sure your network can access.</div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    </div>
+
+
+
+</main>
+
+            <footer class="footer">
+     
+    <a href="#" class="button" id="b2t" aria-label="Back to Top" title="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="32" height="32">
+            <path d="M233.376 722.752L278.624 768 512 534.624 745.376 768l45.248-45.248L512 444.128zM192 352h640V288H192z" fill="currentColor"></path>
+        </svg>
+    </a>
+
+    
+
+
+    
+     
+ 
+
+ 
+    
+        
+        <p class="footer-copyright">
+            Copyright © 2022&nbsp;-&nbsp;2023 <a href="/">Loplooop</a>
+        </p>
+    
+    
+    <p>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme - <a href="https://github.com/ChrAlpha/hexo-theme-cards" target="_blank">Cards</a></p>
+</footer>
+
+        </div>
+        
+    <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+    <script>
+        window.lazyLoadOptions = {
+            elements_selector: ".lazy",
+            threshold: 0
+        };
+    </script>
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+    
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+    
+    <script>
+        function loadComment() {
+            window.disqus_config = function () {
+                this.page.url = 'https://kukupii.github.io/2023/03/03/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80-1/';
+                this.page.identifier = '2023/03/03/响应式布局-1/';
+            };
+            (function(){
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + 'https-kukupii-github-io' + '.disqus.com/embed.js';
+                (document.head || document.body).appendChild(dsq);
+            })();
+        }
+    
+        var runningOnBrowser = typeof window !== "undefined";
+        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
+    
+        setTimeout(function () {
+            if (!isBot && supportsIntersectionObserver) {
+                var comment_observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting) {
+                        loadComment();
+                        comment_observer.disconnect();
+                    }
+                }, { threshold: [0] });
+                comment_observer.observe(document.getElementById('comment'));
+            } else {
+                loadComment();
+            }
+        }, 1);
+    </script>
+
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+
+
+
+    </body>
+</html>

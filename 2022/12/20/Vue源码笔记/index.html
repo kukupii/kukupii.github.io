@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+
+    
+
+    <!-- 渲染优化 -->
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="HandheldFriendly" content="True" >
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--icon-->
+
+    
+        <link rel="shortcut icon" href="/favicon.ico">
+    
+    
+    
+    
+    
+
+
+    <!-- meta -->
+
+
+<title>Vue源码阅读笔记 | Loplooop</title>
+
+
+    <meta name="keywords" content="vue3, notes">
+
+
+
+
+    <!-- OpenGraph -->
+ 
+    <meta name="description" content="跟尤雨溪一起解读Vue3源码【中英字幕】- Vue Mastery观看笔记记录。 Introwhat is the DOM?Document Object Model. This is our browser’s interface(API) to change what is displayed on the screen. HTML maps to a series of DOM nodes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue源码阅读笔记">
+<meta property="og:url" content="https://kukupii.github.io/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Loplooop">
+<meta property="og:description" content="跟尤雨溪一起解读Vue3源码【中英字幕】- Vue Mastery观看笔记记录。 Introwhat is the DOM?Document Object Model. This is our browser’s interface(API) to change what is displayed on the screen. HTML maps to a series of DOM nodes">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-12-20T08:12:23.000Z">
+<meta property="article:modified_time" content="2022-12-20T07:34:06.934Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="vue3">
+<meta property="article:tag" content="notes">
+<meta name="twitter:card" content="summary_large_image">
+
+
+    
+<link rel="stylesheet" href="/css/style/main.css">
+ 
+
+    
+    
+        <link rel="stylesheet" id="hl-default-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/github.min.css" media="none" >
+        
+            <link rel="stylesheet" id="hl-dark-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/atom-one-dark-reasonable.min.css" media="none">
+        
+    
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/style/dark.min.css">
+
+    
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/js/darkmode.min.js"></script>
+
+
+
+     
+
+    <!-- custom head -->
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Loplooop" type="application/atom+xml">
+</head>
+
+    <body>
+        <div id="app" tabindex="-1">
+            <header class="header">
+    <div class="header__left">
+        <a href="/" class="button">
+            <span class="logo__text">Loploop</span>
+        </a>
+    </div>
+    <div class="header__right">
+        
+            <div class="navbar__menus">
+                
+                    <a href="/" class="navbar-menu button">Home</a>
+                
+                    <a href="/tags/" class="navbar-menu button">Tags</a>
+                
+                    <a href="/archives/" class="navbar-menu button">Archives</a>
+                
+                    <a href="/friends/" class="navbar-menu button">Friends</a>
+                
+                    <a href="/page/" class="navbar-menu button">Page</a>
+                
+            </div>
+        
+        
+        
+    <a href="/search/" id="btn-search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="32"><path d="M192 448c0-141.152 114.848-256 256-256s256 114.848 256 256-114.848 256-256 256-256-114.848-256-256z m710.624 409.376l-206.88-206.88A318.784 318.784 0 0 0 768 448c0-176.736-143.264-320-320-320S128 271.264 128 448s143.264 320 320 320a318.784 318.784 0 0 0 202.496-72.256l206.88 206.88 45.248-45.248z"></path></svg>
+    </a>
+
+
+        
+        
+    <a href="javaScript:void(0);" id="btn-toggle-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </a>
+
+
+        
+            <a class="dropdown-icon button" id="btn-dropdown" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path></svg></a>
+            <div class="dropdown-menus" id="dropdown-menus">
+                
+                    <a href="/" class="dropdown-menu button">Home</a>
+                
+                    <a href="/tags/" class="dropdown-menu button">Tags</a>
+                
+                    <a href="/archives/" class="dropdown-menu button">Archives</a>
+                
+                    <a href="/friends/" class="dropdown-menu button">Friends</a>
+                
+                    <a href="/page/" class="dropdown-menu button">Page</a>
+                
+            </div>
+        
+    </div>
+</header>
+
+
+            <main class="main">
+    
+
+<div class="post-title">
+    <h1 class="post-title__text">
+        Vue源码阅读笔记
+    </h1>
+    <div class="post-title__meta">
+        <a href="/archives/2022/12/" class="post-meta__date button">2022-12-20</a>
+        
+ 
+        
+    
+    
+
+
+ 
+
+ 
+    </div>
+</div>
+
+
+    <aside class="post-side">
+        <div class="post-side__toc">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#what-is-the-DOM"><span class="toc-number">1.1.</span> <span class="toc-text">what is the DOM?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Virtual-DOM"><span class="toc-number">1.2.</span> <span class="toc-text">Virtual DOM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vue-core-module"><span class="toc-number">1.3.</span> <span class="toc-text">Vue core module:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Reactivity-module"><span class="toc-number">1.3.1.</span> <span class="toc-text">Reactivity module:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Compiler-Module"><span class="toc-number">1.3.2.</span> <span class="toc-text">Compiler Module:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Renderer-Module"><span class="toc-number">1.3.3.</span> <span class="toc-text">Renderer Module:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Walking-through-a-simple-Vue-app-a-template-which-reference-to-a-reactive-object"><span class="toc-number">1.4.</span> <span class="toc-text">Walking through a simple Vue app: a template which reference to a reactive object</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rendering-Mechanism"><span class="toc-number">2.</span> <span class="toc-text">Rendering Mechanism</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Benefits-of-Virtual-DOM"><span class="toc-number">2.1.</span> <span class="toc-text">Benefits of Virtual DOM:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What-is-render-function"><span class="toc-number">2.2.</span> <span class="toc-text">What is render function?</span></a></li></ol></li></ol>
+        </div>
+    </aside>
+    <a class="btn-toc button" id="btn-toc" tabindex="0">
+        <svg viewBox="0 0 1024 1024" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M128 256h64V192H128zM320 256h576V192H320zM128 544h64v-64H128zM320 544h576v-64H320zM128 832h64v-64H128zM320 832h576v-64H320z" fill="currentColor"></path>
+        </svg>
+    </a>
+    <div class="toc-menus" id="toc-menus">
+        <div class="toc-title">Article Directory</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Intro"><span class="toc-number">1.</span> <span class="toc-text">Intro</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#what-is-the-DOM"><span class="toc-number">1.1.</span> <span class="toc-text">what is the DOM?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Virtual-DOM"><span class="toc-number">1.2.</span> <span class="toc-text">Virtual DOM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vue-core-module"><span class="toc-number">1.3.</span> <span class="toc-text">Vue core module:</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Reactivity-module"><span class="toc-number">1.3.1.</span> <span class="toc-text">Reactivity module:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Compiler-Module"><span class="toc-number">1.3.2.</span> <span class="toc-text">Compiler Module:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Renderer-Module"><span class="toc-number">1.3.3.</span> <span class="toc-text">Renderer Module:</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Walking-through-a-simple-Vue-app-a-template-which-reference-to-a-reactive-object"><span class="toc-number">1.4.</span> <span class="toc-text">Walking through a simple Vue app: a template which reference to a reactive object</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rendering-Mechanism"><span class="toc-number">2.</span> <span class="toc-text">Rendering Mechanism</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Benefits-of-Virtual-DOM"><span class="toc-number">2.1.</span> <span class="toc-text">Benefits of Virtual DOM:</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#What-is-render-function"><span class="toc-number">2.2.</span> <span class="toc-text">What is render function?</span></a></li></ol></li></ol>
+    </div>
+
+
+<article class="post post__with-toc content-card">
+    <div class="post__header"></div>
+    <div class="post__content">
+        <p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1rC4y187Vw/?spm_id_from=333.1007.top_right_bar_window_default_collection.content.click&vd_source=d247184ffe2b5293f1c76874d6153aed">跟尤雨溪一起解读Vue3源码【中英字幕】- Vue Mastery</a>观看笔记记录。</p>
+<h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><h3 id="what-is-the-DOM"><a href="#what-is-the-DOM" class="headerlink" title="what is the DOM?"></a>what is the DOM?</h3><p>Document Object Model. This is our browser’s interface(API) to change what is displayed on the screen. HTML maps to a series of DOM nodes that we can manipulate by JavaScript.</p>
+<p>文件对象模型，浏览器页面所呈现的内容。把HTML加载到浏览器，浏览器创建一系列的DOM节点，并渲染在页面上，这些DOM节点可以使用JS进行操作。</p>
+<h3 id="Virtual-DOM"><a href="#Virtual-DOM" class="headerlink" title="Virtual DOM"></a>Virtual DOM</h3><p>DOM tree上可以有成千上万的DOM节点，搜索和更新起来非常困难，因此诞生了Virtual DOM.</p>
+<p>Virtual DOM is a way of representing the actual DOM with JavaScript Objects.</p>
+<p>一个简单的HTML，比如<code>&lt;div&gt;hello&lt;/div&gt;</code>,可以通过Vnode表现为</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">tag</span>:<span class="string">&#x27;div&#x27;</span>,</span><br><span class="line">    <span class="attr">children</span>:[</span><br><span class="line">        &#123;</span><br><span class="line">        <span class="attr">text</span>:<span class="string">&#x27;hello&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Vue基于模板创建一个渲染函数，并返回一个Vnode对象,例如</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params">h</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>,<span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当Vnode有变化时，渲染函数再次运行，创建一个新的vnode节点，并与旧vnode节点对比（diff）。</p>
+<h3 id="Vue-core-module"><a href="#Vue-core-module" class="headerlink" title="Vue core module:"></a>Vue core module:</h3><p>Reactivity module, Compiler Module, Renderer Module.</p>
+<h4 id="Reactivity-module"><a href="#Reactivity-module" class="headerlink" title="Reactivity module:"></a>Reactivity module:</h4><p>allow us to create JavaScript reactive objects that can be watched for changes.</p>
+<p>when code which uses these objects are run, they’re tracked, so they can be run later if the reactivity object changes.</p>
+<h4 id="Compiler-Module"><a href="#Compiler-Module" class="headerlink" title="Compiler Module:"></a>Compiler Module:</h4><p>takes HTML templates and compiles them into render functions, more often happens when a Vue project is built, so that a browser only ever receives render functions.</p>
+<h4 id="Renderer-Module"><a href="#Renderer-Module" class="headerlink" title="Renderer Module:"></a>Renderer Module:</h4><p><strong>Three phases: Render, mount and patch.</strong></p>
+<p>render phase: call render function and return virtual DOM node.</p>
+<p>mount phase: use vnode creates webpage</p>
+<p>patch phase: compare old vnode with new vnode, and only updates the changed part.</p>
+<h3 id="Walking-through-a-simple-Vue-app-a-template-which-reference-to-a-reactive-object"><a href="#Walking-through-a-simple-Vue-app-a-template-which-reference-to-a-reactive-object" class="headerlink" title="Walking through a simple Vue app: a template which reference to a reactive object"></a>Walking through a simple Vue app: a template which reference to a reactive object</h3><ol>
+<li><p>the template compiler changes HTML into a render function</p>
+</li>
+<li><p>the reactive objects are initialized using the reactivity module</p>
+</li>
+<li><p>the render function returns a DOM node.  it’s referred reactive object, now be watched.</p>
+</li>
+<li><p>the mount phase uses the VNode to create the DOM to webpage</p>
+</li>
+<li><p>if any changes happen to our reactive object, it will cause a re-render</p>
+</li>
+</ol>
+<h2 id="Rendering-Mechanism"><a href="#Rendering-Mechanism" class="headerlink" title="Rendering Mechanism"></a>Rendering Mechanism</h2><h3 id="Benefits-of-Virtual-DOM"><a href="#Benefits-of-Virtual-DOM" class="headerlink" title="Benefits of Virtual DOM:"></a>Benefits of Virtual DOM:</h3><ol>
+<li><p>Decouples rendering logical from the actual DOM - makes it straighforward to reuse it in non-browser envirnoment, e.g. rendering to a string(SSR), rendering to a canvas&#x2F;WebGL, or native mobile rendering.</p>
+</li>
+<li><p>Provides the ability to programmatically construct, inspect, clone and create derivative structures before actually returning it to the rendering engine, and it using the full power of JavaScript.</p>
+</li>
+</ol>
+<p>Conclusion: templates will get where you want to go, in 99% situation, you only need to write down the HTML, but if you want to do something programmatically, in that case, you need to code up a render funtion.</p>
+<h3 id="What-is-render-function"><a href="#What-is-render-function" class="headerlink" title="What is render function?"></a>What is render function?</h3><p>In <strong>Vue2</strong> API (more nestle)</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title function_">render</span>(<span class="params">h</span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>, &#123;</span><br><span class="line">        <span class="attr">attrs</span>:&#123;</span><br><span class="line">            <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="attr">on</span>:&#123;</span><br><span class="line">            <span class="attr">click</span>:<span class="variable language_">this</span>.<span class="property">onClick</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;, <span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In <strong>Vue3</strong> API</p>
+<ul>
+<li><p>Flat props structure</p>
+</li>
+<li><p>Globally imported <code>h</code> helper</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; h &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title function_">render</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">h</span>(<span class="string">&#x27;div&#x27;</span>,&#123;</span><br><span class="line">        <span class="attr">id</span>:<span class="string">&#x27;foo&#x27;</span>,</span><br><span class="line">        <span class="attr">onClick</span>: <span class="variable language_">this</span>.<span class="property">onClick</span></span><br><span class="line">    &#125;, <span class="string">&#x27;hello&#x27;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+    
+    <div class="post__license">
+        <p>
+            <strong>Author: </strong>Loploop
+        </p>
+        <p>
+            <strong>
+                Permalink: 
+            </strong>
+            <a href="https://kukupii.github.io/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/">https://kukupii.github.io/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/</a>
+        </p>
+        
+    </div>
+ 
+    <div class="post-footer__meta"><p>updated at 2022-12-20</p></div> 
+    <div class="post-entry__tags"><a href="/tags/vue3/" class="post-tags__link button"># vue3</a><a href="/tags/notes/" class="post-tags__link button"># notes</a></div> 
+</article>
+
+
+    <div class="nav">
+        <div class="nav__prev">
+            
+                <a href="/2023/03/03/%E5%93%8D%E5%BA%94%E5%BC%8F%E5%B8%83%E5%B1%80-1/" class="nav__link">
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M589.088 790.624L310.464 512l278.624-278.624 45.248 45.248L400.96 512l233.376 233.376z" fill="#808080"></path></svg>
+                    </div>
+                    <div>
+                        <div class="nav__label">
+                            Previous Post
+                        </div>
+                        <div class="nav__title">
+                            响应式布局
+                        </div>
+                    </div>
+                </a>
+            
+        </div>
+        <div class="nav__next">
+            
+                <a href="/2022/11/17/js30%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%8801~05%EF%BC%89/" class="nav__link">
+                    <div>
+                        <div class="nav__label">
+                            Next Post
+                        </div>
+                        <div class="nav__title">
+                            js30学习笔记（01~05）
+                        </div>
+                    </div>
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M434.944 790.624l-45.248-45.248L623.04 512l-233.376-233.376 45.248-45.248L713.568 512z" fill="#808080"></path></svg>
+                    </div>
+                </a>
+            
+        </div>
+    </div>
+
+
+
+    <div class="post__comments post__with-toc content-card" id="comment">
+        
+    <h4>Comments</h4>
+    
+    <div id="disqus_thread">Unable to load Disqus, please make sure your network can access.</div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    </div>
+
+
+
+</main>
+
+            <footer class="footer">
+     
+    <a href="#" class="button" id="b2t" aria-label="Back to Top" title="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="32" height="32">
+            <path d="M233.376 722.752L278.624 768 512 534.624 745.376 768l45.248-45.248L512 444.128zM192 352h640V288H192z" fill="currentColor"></path>
+        </svg>
+    </a>
+
+    
+
+
+    
+     
+ 
+
+ 
+    
+        
+        <p class="footer-copyright">
+            Copyright © 2022&nbsp;-&nbsp;2023 <a href="/">Loplooop</a>
+        </p>
+    
+    
+    <p>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme - <a href="https://github.com/ChrAlpha/hexo-theme-cards" target="_blank">Cards</a></p>
+</footer>
+
+        </div>
+        
+    <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+    <script>
+        window.lazyLoadOptions = {
+            elements_selector: ".lazy",
+            threshold: 0
+        };
+    </script>
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+    
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+    
+    <script>
+        function loadComment() {
+            window.disqus_config = function () {
+                this.page.url = 'https://kukupii.github.io/2022/12/20/Vue%E6%BA%90%E7%A0%81%E7%AC%94%E8%AE%B0/';
+                this.page.identifier = '2022/12/20/Vue源码笔记/';
+            };
+            (function(){
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + 'https-kukupii-github-io' + '.disqus.com/embed.js';
+                (document.head || document.body).appendChild(dsq);
+            })();
+        }
+    
+        var runningOnBrowser = typeof window !== "undefined";
+        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
+    
+        setTimeout(function () {
+            if (!isBot && supportsIntersectionObserver) {
+                var comment_observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting) {
+                        loadComment();
+                        comment_observer.disconnect();
+                    }
+                }, { threshold: [0] });
+                comment_observer.observe(document.getElementById('comment'));
+            } else {
+                loadComment();
+            }
+        }, 1);
+    </script>
+
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+
+
+
+    </body>
+</html>

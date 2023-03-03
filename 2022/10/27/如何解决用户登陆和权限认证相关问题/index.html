@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+
+    
+
+    <!-- 渲染优化 -->
+    <meta name="renderer" content="webkit">
+    <meta name="force-rendering" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="HandheldFriendly" content="True" >
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+    <!--icon-->
+
+    
+        <link rel="shortcut icon" href="/favicon.ico">
+    
+    
+    
+    
+    
+
+
+    <!-- meta -->
+
+
+<title>如何解决用户登陆和权限认证相关问题 | Loplooop</title>
+
+
+    <meta name="keywords" content="Auth">
+
+
+
+
+    <!-- OpenGraph -->
+ 
+    <meta name="description" content="总问题： pinia 怎样发送post请求  token是什么  jwt的工作原理  jwt和session的区别  SPA应用中怎样持久化获取用户的状态  针对不同的请求的权限管理  怎样显示全局数据显示   Pinia怎样发送POST请求建立一个单独的useAuthStore，在action中进行POST请求，使用async和await。  Unlike getters, actions ca">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何解决用户登陆和权限认证相关问题">
+<meta property="og:url" content="https://kukupii.github.io/2022/10/27/%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%94%A8%E6%88%B7%E7%99%BB%E9%99%86%E5%92%8C%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:site_name" content="Loplooop">
+<meta property="og:description" content="总问题： pinia 怎样发送post请求  token是什么  jwt的工作原理  jwt和session的区别  SPA应用中怎样持久化获取用户的状态  针对不同的请求的权限管理  怎样显示全局数据显示   Pinia怎样发送POST请求建立一个单独的useAuthStore，在action中进行POST请求，使用async和await。  Unlike getters, actions ca">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="file:///C:/Users/15810/Desktop/QQ%E5%9B%BE%E7%89%8720221027205357.png">
+<meta property="og:image" content="file:///C:/Users/15810/Desktop/@F@%4R$NHSSDMSC22]$9O9.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/kukupii/ImgBed-Rep/img/QQ%E5%9B%BE%E7%89%8720221027212147.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/kukupii/ImgBed-Rep/img/QQ%E5%9B%BE%E7%89%8720221027214350.png">
+<meta property="article:published_time" content="2022-10-27T12:23:21.000Z">
+<meta property="article:modified_time" content="2022-11-17T08:42:38.668Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Auth">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="file:///C:/Users/15810/Desktop/QQ%E5%9B%BE%E7%89%8720221027205357.png">
+
+
+    
+<link rel="stylesheet" href="/css/style/main.css">
+ 
+
+    
+    
+        <link rel="stylesheet" id="hl-default-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/github.min.css" media="none" >
+        
+            <link rel="stylesheet" id="hl-dark-theme" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/highlight/atom-one-dark-reasonable.min.css" media="none">
+        
+    
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/css/style/dark.min.css">
+
+    
+<script src="https://cdn.jsdelivr.net/npm/hexo-theme-cards@1.2/dist/js/darkmode.min.js"></script>
+
+
+
+     
+
+    <!-- custom head -->
+
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Loplooop" type="application/atom+xml">
+</head>
+
+    <body>
+        <div id="app" tabindex="-1">
+            <header class="header">
+    <div class="header__left">
+        <a href="/" class="button">
+            <span class="logo__text">Loploop</span>
+        </a>
+    </div>
+    <div class="header__right">
+        
+            <div class="navbar__menus">
+                
+                    <a href="/" class="navbar-menu button">Home</a>
+                
+                    <a href="/tags/" class="navbar-menu button">Tags</a>
+                
+                    <a href="/archives/" class="navbar-menu button">Archives</a>
+                
+                    <a href="/friends/" class="navbar-menu button">Friends</a>
+                
+                    <a href="/page/" class="navbar-menu button">Page</a>
+                
+            </div>
+        
+        
+        
+    <a href="/search/" id="btn-search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="24" height="24" fill="currentColor" stroke="currentColor" stroke-width="32"><path d="M192 448c0-141.152 114.848-256 256-256s256 114.848 256 256-114.848 256-256 256-256-114.848-256-256z m710.624 409.376l-206.88-206.88A318.784 318.784 0 0 0 768 448c0-176.736-143.264-320-320-320S128 271.264 128 448s143.264 320 320 320a318.784 318.784 0 0 0 202.496-72.256l206.88 206.88 45.248-45.248z"></path></svg>
+    </a>
+
+
+        
+        
+    <a href="javaScript:void(0);" id="btn-toggle-dark">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+    </a>
+
+
+        
+            <a class="dropdown-icon button" id="btn-dropdown" tabindex="0"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width='24' height='24' fill="none" stroke="currentColor" stroke-width="0.7" stroke-linecap="round" stroke-linejoin="round"><path fill="currentColor" d="M3.314,4.8h13.372c0.41,0,0.743-0.333,0.743-0.743c0-0.41-0.333-0.743-0.743-0.743H3.314c-0.41,0-0.743,0.333-0.743,0.743C2.571,4.467,2.904,4.8,3.314,4.8z M16.686,15.2H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,15.2,16.686,15.2z M16.686,9.257H3.314c-0.41,0-0.743,0.333-0.743,0.743s0.333,0.743,0.743,0.743h13.372c0.41,0,0.743-0.333,0.743-0.743S17.096,9.257,16.686,9.257z"></path></svg></a>
+            <div class="dropdown-menus" id="dropdown-menus">
+                
+                    <a href="/" class="dropdown-menu button">Home</a>
+                
+                    <a href="/tags/" class="dropdown-menu button">Tags</a>
+                
+                    <a href="/archives/" class="dropdown-menu button">Archives</a>
+                
+                    <a href="/friends/" class="dropdown-menu button">Friends</a>
+                
+                    <a href="/page/" class="dropdown-menu button">Page</a>
+                
+            </div>
+        
+    </div>
+</header>
+
+
+            <main class="main">
+    
+
+<div class="post-title">
+    <h1 class="post-title__text">
+        如何解决用户登陆和权限认证相关问题
+    </h1>
+    <div class="post-title__meta">
+        <a href="/archives/2022/10/" class="post-meta__date button">2022-10-27</a>
+        
+ 
+        
+    
+    
+
+
+ 
+
+ 
+    </div>
+</div>
+
+
+    <aside class="post-side">
+        <div class="post-side__toc">
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总问题：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pinia%E6%80%8E%E6%A0%B7%E5%8F%91%E9%80%81POST%E8%AF%B7%E6%B1%82"><span class="toc-number">2.</span> <span class="toc-text">Pinia怎样发送POST请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Token%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.</span> <span class="toc-text">Token是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jwt%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">jwt的工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#web%E5%BA%94%E7%94%A8%E4%B8%AD%E4%B8%A4%E4%B8%AA%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E7%9A%84%E9%80%94%E5%BE%84%EF%BC%9A"><span class="toc-number">4.0.1.</span> <span class="toc-text">web应用中两个权限认证的途径：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#jwt%E8%AF%A6%E8%A7%A3"><span class="toc-number">4.0.2.</span> <span class="toc-text">jwt详解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jwt%E5%92%8Csession%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">5.</span> <span class="toc-text">jwt和session的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPA%E5%BA%94%E7%94%A8%E4%B8%AD%E5%A6%82%E4%BD%95%E6%8C%81%E4%B9%85%E5%8C%96%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-number">6.</span> <span class="toc-text">SPA应用中如何持久化获取用户的状态</span></a></li></ol>
+        </div>
+    </aside>
+    <a class="btn-toc button" id="btn-toc" tabindex="0">
+        <svg viewBox="0 0 1024 1024" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M128 256h64V192H128zM320 256h576V192H320zM128 544h64v-64H128zM320 544h576v-64H320zM128 832h64v-64H128zM320 832h576v-64H320z" fill="currentColor"></path>
+        </svg>
+    </a>
+    <div class="toc-menus" id="toc-menus">
+        <div class="toc-title">Article Directory</div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">总问题：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pinia%E6%80%8E%E6%A0%B7%E5%8F%91%E9%80%81POST%E8%AF%B7%E6%B1%82"><span class="toc-number">2.</span> <span class="toc-text">Pinia怎样发送POST请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Token%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">3.</span> <span class="toc-text">Token是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jwt%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">jwt的工作原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#web%E5%BA%94%E7%94%A8%E4%B8%AD%E4%B8%A4%E4%B8%AA%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E7%9A%84%E9%80%94%E5%BE%84%EF%BC%9A"><span class="toc-number">4.0.1.</span> <span class="toc-text">web应用中两个权限认证的途径：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#jwt%E8%AF%A6%E8%A7%A3"><span class="toc-number">4.0.2.</span> <span class="toc-text">jwt详解</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jwt%E5%92%8Csession%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">5.</span> <span class="toc-text">jwt和session的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPA%E5%BA%94%E7%94%A8%E4%B8%AD%E5%A6%82%E4%BD%95%E6%8C%81%E4%B9%85%E5%8C%96%E8%8E%B7%E5%8F%96%E7%94%A8%E6%88%B7%E7%9A%84%E7%8A%B6%E6%80%81"><span class="toc-number">6.</span> <span class="toc-text">SPA应用中如何持久化获取用户的状态</span></a></li></ol>
+    </div>
+
+
+<article class="post post__with-toc content-card">
+    <div class="post__header"></div>
+    <div class="post__content">
+        <h2 id="总问题："><a href="#总问题：" class="headerlink" title="总问题："></a>总问题：</h2><ol>
+<li><p>pinia 怎样发送post请求</p>
+</li>
+<li><p>token是什么</p>
+</li>
+<li><p>jwt的工作原理</p>
+</li>
+<li><p>jwt和session的区别</p>
+</li>
+<li><p>SPA应用中怎样持久化获取用户的状态</p>
+</li>
+<li><p>针对不同的请求的权限管理</p>
+</li>
+<li><p>怎样显示全局数据显示</p>
+</li>
+</ol>
+<h2 id="Pinia怎样发送POST请求"><a href="#Pinia怎样发送POST请求" class="headerlink" title="Pinia怎样发送POST请求"></a>Pinia怎样发送POST请求</h2><p>建立一个单独的useAuthStore，在action中进行POST请求，使用async和await。</p>
+<blockquote>
+<p><strong>Unlike getters, <code>actions</code> can be asynchronous</strong>, you can <code>await</code> inside of actions any API call or even other actions!</p>
+</blockquote>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="title function_">userLogin</span>(<span class="params">payload: LoginProps</span>) &#123;</span><br><span class="line">    <span class="comment">// POST请求</span></span><br><span class="line">    <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios.<span class="title function_">post</span>(<span class="string">&quot;/user/login&quot;</span>, payload);</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+
+<h2 id="Token是什么"><a href="#Token是什么" class="headerlink" title="Token是什么"></a>Token是什么</h2><p><strong>Token是服务端生成的一串字符串，以作客户端进行请求的一个令牌，当第一次登录后，服务器生成一个Token便将此Token返回给客户端</strong>，以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码。token其实说的更通俗点可以叫暗号，在一些数据传输之前，要先进行暗号的核对，不同的暗号被授权不同的数据操作。</p>
+<blockquote>
+<p>Token在计算机身份认证中是<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E4%BB%A4%E7%89%8C/9716092?fromModule=lemma_inlink">令牌</a>（临时）的意思，在词法分析中是标记的意思。一般作为邀请、登录系统使用。</p>
+</blockquote>
+<h2 id="jwt的工作原理"><a href="#jwt的工作原理" class="headerlink" title="jwt的工作原理"></a>jwt的工作原理</h2><p>在jwt工作原理之前，先了解一下两个权限认证的途径。第一个是基于cookie和session的登录验证，另一个是基于token和jwt的。</p>
+<h4 id="web应用中两个权限认证的途径："><a href="#web应用中两个权限认证的途径：" class="headerlink" title="web应用中两个权限认证的途径："></a>web应用中两个权限认证的途径：</h4><p>一、<strong>基于cookie和session的登陆验证（classic）（有状态）</strong></p>
+<p>cookie：存储在客户端、不可跨域。</p>
+<p>session：</p>
+<ul>
+<li>session 是另一种记录服务器和客户端会话状态的机制</li>
+<li>session 是基于 cookie 实现的，session 存储在服务器端，sessionId 会被存储到客户端的cookie 中</li>
+</ul>
+<p>具体流程：</p>
+<p>    <img title="" src="file:///C:/Users/15810/Desktop/QQ图片20221027205357.png" class="lazy" data-srcset="file:///C:/Users/15810/Desktop/QQ图片20221027205357.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" alt="" width="578"></p>
+<ol>
+<li><p>客户端发送登陆请求</p>
+</li>
+<li><p>服务器创建session，并存储在数据库中</p>
+</li>
+<li><p>服务器为用户生成一个sessionId，将具有sesssionId的Cookie将放置在用户浏览器中</p>
+</li>
+<li><p>在后续请求中，会根据数据库验证sessionID，如果有效，则接受请求</p>
+</li>
+<li><p>一旦用户注销应用程序，会话将在客户端和服务器端都被销毁</p>
+</li>
+</ol>
+<p>**二、 <strong>基于token和jwt的权限认证（popular)（无状态）</strong></p>
+<p>    具体流程：</p>
+<p>    <img src="file:///C:/Users/15810/Desktop/@F@%4R$NHSSDMSC22]$9O9.png" class="lazy" data-srcset="file:///C:/Users/15810/Desktop/@F@%4R$NHSSDMSC22]$9O9.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" title="" alt="" width="591"></p>
+<p>1.客户端发送登陆请求</p>
+<p>2.服务器接收后使用jwt算法生成对应的token，并返回客户端。</p>
+<p>3.客户端存储token，并在之后的每次权限请求把token放在header中。</p>
+<p>4.服务器反向验证返回的token，验证成功则返回请求的数据。</p>
+<h4 id="jwt详解"><a href="#jwt详解" class="headerlink" title="jwt详解"></a>jwt详解</h4><p>    1.概念：</p>
+<blockquote>
+<p>JWT （JSON Web Token） 是目前最流行的跨域认证解决方案，是一种基于 Token 的认证授权机制。 从 JWT 的全称可以看出，JWT 本身也是 Token，一种规范化之后的 JSON 结构的 Token。</p>
+</blockquote>
+<p>    2.组成部分</p>
+<p>      JWT 本质上就是一组字串，通过（<code>.</code>）切分成三个为 Base64 编码的部分：</p>
+<ul>
+<li><strong>Header</strong> : 描述 JWT 的元数据，定义了生成签名的算法以及 <code>Token</code> 的类型。</li>
+<li><strong>Payload</strong> : 用来存放实际需要传递的数据</li>
+<li><strong>Signature（签名）</strong> ：服务器通过 Payload、Header 和一个密钥(Secret)使用 Header 里面指定的签名算法（默认是 HMAC SHA256）生成。</li>
+</ul>
+<p>    JWT 通常是这样的：<code>xxxxx.yyyyy.zzzzz</code>。</p>
+<p>    3.解码网站：<a target="_blank" rel="noopener" href="https://jwt.io/">https://jwt.io/</a></p>
+<p>    <img src="https://cdn.jsdelivr.net/gh/kukupii/ImgBed-Rep/img/QQ图片20221027212147.png" class="lazy" data-srcset="https://cdn.jsdelivr.net/gh/kukupii/ImgBed-Rep/img/QQ图片20221027212147.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg==" title="" alt="" width="600"></p>
+<h2 id="jwt和session的区别"><a href="#jwt和session的区别" class="headerlink" title="jwt和session的区别"></a>jwt和session的区别</h2><p>    1.本身含义：</p>
+<p>    <code>jwt</code>本身包含用户信息；<code>Session</code>传递的sessionId虽然是一个更简单的字符串，但它本身并没有任何含义。</p>
+<p>    2.用户的状态保存的位置：</p>
+<p>    session是保存在服务端的，而jwt是保存在客户端的。</p>
+<h2 id="SPA应用中如何持久化获取用户的状态"><a href="#SPA应用中如何持久化获取用户的状态" class="headerlink" title="SPA应用中如何持久化获取用户的状态"></a>SPA应用中如何持久化获取用户的状态</h2><p><strong>客户端存储的三种方案</strong></p>
+<ul>
+<li><p>cookie：不支持跨域</p>
+</li>
+<li><p>sessionStorage：页面关闭会被清除</p>
+</li>
+<li><p>localStorage：可以长期保存</p>
+</li>
+</ul>
+<p><strong>localStorage实现持久化的流程</strong></p>
+<p><img src="https://cdn.jsdelivr.net/gh/kukupii/ImgBed-Rep/img/QQ%E5%9B%BE%E7%89%8720221027214350.png" class="lazy" data-srcset="https://cdn.jsdelivr.net/gh/kukupii/ImgBed-Rep/img/QQ%E5%9B%BE%E7%89%8720221027214350.png" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAABlBMVEXMzMyWlpYU2uzLAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNgAAAAAgAB9HFkpgAAAABJRU5ErkJggg=="></p>
+<p>因此实现登陆+持久化的整个流程如下</p>
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// store.ts / action</span></span><br><span class="line"><span class="keyword">async</span> <span class="title function_">userLogin</span>(<span class="params">payload: LoginProps</span>) &#123;</span><br><span class="line">      <span class="comment">//提交信息登陆</span></span><br><span class="line">      <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios.<span class="title function_">post</span>(<span class="string">&quot;/user/login&quot;</span>, payload);</span><br><span class="line">      <span class="comment">//信息正确</span></span><br><span class="line">      <span class="keyword">if</span> (data.<span class="property">code</span> === <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//获取token</span></span><br><span class="line">        <span class="keyword">const</span> &#123; token &#125; = data.<span class="property">data</span>;</span><br><span class="line">        <span class="comment">//储存token</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">token</span> = token;</span><br><span class="line">        <span class="comment">//本地存储</span></span><br><span class="line">        <span class="variable language_">localStorage</span>.<span class="title function_">setItem</span>(<span class="string">&quot;token&quot;</span>, token);</span><br><span class="line">        <span class="comment">//利用token获取用户信息</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">fetchCurrentUser</span>();</span><br><span class="line">        <span class="comment">//返回一个promise，以便catch错误</span></span><br><span class="line">        <span class="keyword">return</span> data;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="keyword">async</span> <span class="title function_">fetchCurrentUser</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> token = <span class="variable language_">this</span>.<span class="property">token</span>;</span><br><span class="line">      <span class="keyword">if</span> (token !== <span class="string">&quot;&quot;</span>) &#123;</span><br><span class="line">        <span class="comment">//axios设置通用header，以便其他操作获取权限</span></span><br><span class="line">        axios.<span class="property">defaults</span>.<span class="property">headers</span>.<span class="property">common</span>.<span class="property">Authorization</span> = <span class="string">`Bearer <span class="subst">$&#123;token&#125;</span>`</span>;</span><br><span class="line">        <span class="comment">//获取用户信息</span></span><br><span class="line">        <span class="keyword">const</span> &#123; data &#125; = <span class="keyword">await</span> axios.<span class="title function_">get</span>(<span class="string">&quot;/user/current&quot;</span>);</span><br><span class="line">        <span class="comment">//显示在界面</span></span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">currentUser</span> = &#123; <span class="attr">isLogin</span>: <span class="literal">true</span>, ...data.<span class="property">data</span> &#125;;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//login.vue中</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">handleSubmit</span>(<span class="params">result: <span class="built_in">boolean</span></span>) &#123;</span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;result&quot;</span> + result);</span><br><span class="line">      <span class="keyword">if</span> (result) &#123;</span><br><span class="line">        <span class="keyword">const</span> payload = &#123;</span><br><span class="line">          <span class="attr">email</span>: emailVal.<span class="property">value</span>,</span><br><span class="line">          <span class="attr">password</span>: passwordVal.<span class="property">value</span>,</span><br><span class="line">        &#125;;</span><br><span class="line">        store</span><br><span class="line">          .<span class="title function_">userLogin</span>(payload)</span><br><span class="line">          .<span class="title function_">then</span>(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="title function_">useCreateMessage</span>(<span class="string">&quot;登陆成功 2秒后跳转首页&quot;</span>, <span class="string">&quot;success&quot;</span>, <span class="number">2000</span>);</span><br><span class="line">            <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">              router.<span class="title function_">push</span>(<span class="string">&quot;/&quot;</span>);</span><br><span class="line">            &#125;, <span class="number">2000</span>);</span><br><span class="line">          &#125;)</span><br><span class="line">          .<span class="title function_">catch</span>(<span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(e);</span><br><span class="line">          &#125;);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+    
+    <div class="post__license">
+        <p>
+            <strong>Author: </strong>Loploop
+        </p>
+        <p>
+            <strong>
+                Permalink: 
+            </strong>
+            <a href="https://kukupii.github.io/2022/10/27/%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%94%A8%E6%88%B7%E7%99%BB%E9%99%86%E5%92%8C%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/">https://kukupii.github.io/2022/10/27/%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%94%A8%E6%88%B7%E7%99%BB%E9%99%86%E5%92%8C%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</a>
+        </p>
+        
+    </div>
+ 
+    <div class="post-footer__meta"><p>updated at 2022-11-17</p></div> 
+    <div class="post-entry__tags"><a href="/tags/Auth/" class="post-tags__link button"># Auth</a></div> 
+</article>
+
+
+    <div class="nav">
+        <div class="nav__prev">
+            
+                <a href="/2022/10/30/%E9%80%9A%E7%94%A8%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E2%80%94%E2%80%94axios%E6%8B%A6%E6%88%AA/" class="nav__link">
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M589.088 790.624L310.464 512l278.624-278.624 45.248 45.248L400.96 512l233.376 233.376z" fill="#808080"></path></svg>
+                    </div>
+                    <div>
+                        <div class="nav__label">
+                            Previous Post
+                        </div>
+                        <div class="nav__title">
+                            通用错误处理——axios拦截
+                        </div>
+                    </div>
+                </a>
+            
+        </div>
+        <div class="nav__next">
+            
+                <a href="/2022/10/26/hexo%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95%E5%A4%87%E5%BF%98%E5%BD%95/" class="nav__link">
+                    <div>
+                        <div class="nav__label">
+                            Next Post
+                        </div>
+                        <div class="nav__title">
+                            hexo使用方法备忘录
+                        </div>
+                    </div>
+                    <div>
+                        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="M434.944 790.624l-45.248-45.248L623.04 512l-233.376-233.376 45.248-45.248L713.568 512z" fill="#808080"></path></svg>
+                    </div>
+                </a>
+            
+        </div>
+    </div>
+
+
+
+    <div class="post__comments post__with-toc content-card" id="comment">
+        
+    <h4>Comments</h4>
+    
+    <div id="disqus_thread">Unable to load Disqus, please make sure your network can access.</div>
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+    </div>
+
+
+
+</main>
+
+            <footer class="footer">
+     
+    <a href="#" class="button" id="b2t" aria-label="Back to Top" title="Back to Top">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="32" height="32">
+            <path d="M233.376 722.752L278.624 768 512 534.624 745.376 768l45.248-45.248L512 444.128zM192 352h640V288H192z" fill="currentColor"></path>
+        </svg>
+    </a>
+
+    
+
+
+    
+     
+ 
+
+ 
+    
+        
+        <p class="footer-copyright">
+            Copyright © 2022&nbsp;-&nbsp;2023 <a href="/">Loplooop</a>
+        </p>
+    
+    
+    <p>Powered by <a href="https://hexo.io" target="_blank">Hexo</a> | Theme - <a href="https://github.com/ChrAlpha/hexo-theme-cards" target="_blank">Cards</a></p>
+</footer>
+
+        </div>
+        
+    <script defer src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.1.0/dist/lazyload.min.js"></script>
+    <script>
+        window.lazyLoadOptions = {
+            elements_selector: ".lazy",
+            threshold: 0
+        };
+    </script>
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+ 
+
+
+
+ 
+
+
+    
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+    
+    <script>
+        function loadComment() {
+            window.disqus_config = function () {
+                this.page.url = 'https://kukupii.github.io/2022/10/27/%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E7%94%A8%E6%88%B7%E7%99%BB%E9%99%86%E5%92%8C%E6%9D%83%E9%99%90%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/';
+                this.page.identifier = '2022/10/27/如何解决用户登陆和权限认证相关问题/';
+            };
+            (function(){
+                var dsq = document.createElement('script');
+                dsq.type = 'text/javascript';
+                dsq.async = true;
+                dsq.src = '//' + 'https-kukupii-github-io' + '.disqus.com/embed.js';
+                (document.head || document.body).appendChild(dsq);
+            })();
+        }
+    
+        var runningOnBrowser = typeof window !== "undefined";
+        var isBot = runningOnBrowser && !("onscroll" in window) || typeof navigator !== "undefined" && /(gle|ing|ro|msn)bot|crawl|spider|yand|duckgo/i.test(navigator.userAgent);
+        var supportsIntersectionObserver = runningOnBrowser && "IntersectionObserver" in window;
+    
+        setTimeout(function () {
+            if (!isBot && supportsIntersectionObserver) {
+                var comment_observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting) {
+                        loadComment();
+                        comment_observer.disconnect();
+                    }
+                }, { threshold: [0] });
+                comment_observer.observe(document.getElementById('comment'));
+            } else {
+                loadComment();
+            }
+        }, 1);
+    </script>
+
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+    
+    
+    
+
+
+
+    </body>
+</html>
